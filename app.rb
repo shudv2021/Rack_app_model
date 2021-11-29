@@ -37,12 +37,12 @@ class App
   end
 
   def errors_in_request
-    @status_code = 400
+    @status = 400
     @message = "Unknown format #{ @converted_time.format_error}"
   end
 
   def success_request
-    @status_code = 200
+    @status = 200
     @message = @converted_time.time
   end
 

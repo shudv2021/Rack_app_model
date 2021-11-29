@@ -15,6 +15,7 @@ class TimeConvertor
     @params.each do |param|
      TRANSFORMATION_PATTERN.key?(param) ? @valid_params << TRANSFORMATION_PATTERN[param] : @format_errors << param
     end
+    self
   end
 
   def success?
