@@ -1,6 +1,6 @@
 require_relative 'time_convertor'
 
-class AppTimer
+class App
 
   def call(env)
     @request = Rack::Request.new(env)
