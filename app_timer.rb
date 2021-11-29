@@ -2,48 +2,34 @@ require_relative 'time_convertor'
 
 class AppTimer
 
+  attr_reader :response
+
   def call(env)
-    @request = Rack::Request.new(env)
-    response
-    [status, headers, body]
+    request_handler(Rack::Request.new(env))
+    @response
   end
+
 
   private
 
-  def response
-    return path_error if @request.path_info != '/time'
+  def request_handler(request)
 
-    @converted_time = TimeConvertor.new(@request.params).call
-    return errors_in_request unless @converted_time.success?
+    if request.path_info != '/time'
+      response(404, 'Check path you input')
+    else
+      @converted_time = TimeConvertor.new(request.params)
+      @converted_time.call
+      if @converted_time.success?
+        response(200, @converted_time.time_by_pattern )
+      else
+        response(400, "Unknown format #{ @converted_time.format_error}")
+      end
+    end
 
-    success_request
   end
 
-  def status
-    @status
-  end
-
-  def headers
-    { 'Content-Type' => 'text/plain' }
-  end
-
-  def body
-    ["#{@message}"]
-  end
-
-  def path_error
-    @status = 404
-    @message = 'Check path you input'
-  end
-
-  def errors_in_request
-    @status = 400
-    @message = "Unknown format #{ @converted_time.format_error}"
-  end
-
-  def success_request
-    @status = 200
-    @message = @converted_time.time
+  def response(status, body)
+    @response = [status, { 'Content-Type' => 'text/plain' } , [body]]
   end
 
 end

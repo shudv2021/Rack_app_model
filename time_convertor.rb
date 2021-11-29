@@ -3,8 +3,6 @@ class TimeConvertor
   TRANSFORMATION_PATTERN = { 'year' => '%Y', 'month' => '%m', 'day' => '%d', 'hour' => '%H', 'minute' => '%m',
                              'second' => '%S' }.freeze
 
-  attr_reader :format_errors
-
   def initialize(params)
     @params = params['format'].split(',')
     @format_errors = []
@@ -15,7 +13,6 @@ class TimeConvertor
     @params.each do |param|
      TRANSFORMATION_PATTERN.key?(param) ? @valid_params << TRANSFORMATION_PATTERN[param] : @format_errors << param
     end
-    self
   end
 
   def success?
